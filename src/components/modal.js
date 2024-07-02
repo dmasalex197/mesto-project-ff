@@ -1,7 +1,3 @@
-const popupImage = document.querySelector(".popup_type_image");
-const popupImageElement = popupImage.querySelector(".popup__image");
-const popupImageCaption = popupImage.querySelector(".popup__caption");
-
 function openPopup(popup) {
   popup.classList.add("popup_is-opened");
   document.body.style.overflow = "hidden";
@@ -12,7 +8,8 @@ function openPopup(popup) {
 function closePopup(popup) {
   popup.classList.remove("popup_is-opened");
   document.body.style.overflow = "";
-  document.addEventListener("keydown", closePopupEscape);
+  document.removeEventListener("keydown", closePopupEscape);
+  document.removeEventListener("mousedown", closePopupOverlay);
 }
 
 function closePopupEscape(evt) {
@@ -24,16 +21,8 @@ function closePopupEscape(evt) {
 
 function closePopupOverlay(event) {
   if (event.target.classList.contains("popup")) {
-    const popup = document.querySelector(".popup_is-opened");
-    closePopup(popup);
+    closePopup(event.target);
   }
 }
 
-function openImagePopup(imageLink, caption) {
-  popupImageElement.src = imageLink;
-  popupImageElement.alt = caption;
-  popupImageCaption.textContent = caption;
-  openPopup(popupImage);
-}
-
-export { openPopup, closePopup, openImagePopup };
+export { openPopup, closePopup };

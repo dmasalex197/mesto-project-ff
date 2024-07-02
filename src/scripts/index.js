@@ -1,19 +1,10 @@
 import "../pages/index.css";
-import {
-  sunset,
-  mountains,
-  tuscany,
-  italy,
-  lake,
-  city,
-  initialCards,
-} from "./cards.js";
+import { initialCards } from "./cards.js";
 import { openPopup, closePopup } from "../components/modal.js";
-import { createCard } from "../components/card.js";
+import { createCard, deleteCard, addLike } from "../components/card.js";
 
 // @todo: DOM узлы
-const content = document.querySelector(".content");
-const placesList = content.querySelector(".places__list");
+const placesList = document.querySelector(".places__list");
 const popups = document.querySelectorAll(".popup__content");
 const newPlaseModal = document.querySelector(".profile__add-button");
 const profileEditModal = document.querySelector(".profile__edit-button");
@@ -31,37 +22,48 @@ const placeNameInput = newCardForm.querySelector(
   ".popup__input_type_card-name"
 );
 const linkInput = newCardForm.querySelector(".popup__input_type_url");
+const popupImage = document.querySelector(".popup_type_image");
+const popupImageElement = popupImage.querySelector(".popup__image");
+const popupImageCaption = popupImage.querySelector(".popup__caption");
 
-// @todo: Функция добавления like
-function handleLike(button) {
-  button.classList.toggle("card__like-button_is-active");
-}
+// @todo: Вывести карточки на страницу
+initialCards.forEach(function (element) {
+  const card = createCard(element, deleteCard, addLike, openImagePopup);
+  placesList.append(card);
+});
 
-// @todo: Функция удаления карточки
-const deleteCard = (cardElement) => {
-  cardElement.remove();
-};
-
-// @todo: Обработчик события submit для формы создания новой карточки
-function handleNewCardSubmit(evt) {
+// @todo: Создание новой карточки
+function addNewCard(evt) {
   evt.preventDefault();
-  const placeName = placeNameInput.value;
-  const link = linkInput.value;
   const newCard = {
-    name: placeName,
-    link: link,
+    name: placeNameInput.value,
+    link: linkInput.value,
   };
-  const newCardElement = createCard(newCard, deleteCard, handleLike);
-  placesList.prepend(newCardElement);
+  const newCardElement = createCard(newCard, deleteCard, addLike);
+  placesList.append(newCardElement);
   closePopup(popupNewCard);
   newCardForm.reset();
 }
 
-// @todo: Вывести карточки на страницу
-initialCards.forEach((element) => {
-  const card = createCard(element, deleteCard, handleLike);
-  placesList.append(card);
-});
+// @todo: Функция редактирования и сохранения данных о пользователе
+function editPopupFormProfile(evt) {
+  evt.preventDefault();
+  const nameValue = popupFormEditName.value;
+  const jobValue = popupFormEditDescription.value;
+  profileTitle.textContent = nameValue;
+  profileDescription.textContent = jobValue;
+  closePopup(popupEditTitle);
+}
+
+formEditProfile.addEventListener("submit", editPopupFormProfile);
+newCardForm.addEventListener("submit", addNewCard);
+
+function openImagePopup(imageLink, caption) {
+  popupImageElement.src = imageLink;
+  popupImageElement.alt = caption;
+  popupImageCaption.textContent = caption;
+  openPopup(popupImage);
+}
 
 popups.forEach((popup) => {
   popup.addEventListener("click", (evt) => {
@@ -72,16 +74,6 @@ popups.forEach((popup) => {
   });
 });
 
-// @todo: Функция редактирования и сохранения данных о пользователе
-function handleFormSubmit(evt) {
-  evt.preventDefault();
-  const nameValue = popupFormEditName.value;
-  const jobValue = popupFormEditDescription.value;
-  profileTitle.textContent = nameValue;
-  profileDescription.textContent = jobValue;
-  closePopup(popupEditTitle);
-}
-
 profileEditModal.addEventListener("click", () => {
   popupFormEditName.value = profileTitle.textContent;
   popupFormEditDescription.value = profileDescription.textContent;
@@ -91,5 +83,3 @@ profileEditModal.addEventListener("click", () => {
 newPlaseModal.addEventListener("click", () => {
   openPopup(popupNewCard);
 });
-newCardForm.addEventListener("submit", handleNewCardSubmit);
-formEditProfile.addEventListener("submit", handleFormSubmit);
