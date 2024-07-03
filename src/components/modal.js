@@ -9,7 +9,7 @@ function closePopup(popup) {
   popup.classList.remove("popup_is-opened");
   document.body.style.overflow = "";
   document.removeEventListener("keydown", closePopupEscape);
-  document.removeEventListener("mousedown", closePopupOverlay);
+  popup.removeEventListener("mousedown", closePopupOverlay);
 }
 
 function closePopupEscape(evt) {
