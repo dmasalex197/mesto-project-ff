@@ -1,4 +1,6 @@
-function createCard(card, deleteCard, handleLike, openImagePopup) {
+import { deleteMyCard } from "./api.js";
+
+function createCard(userId, card, deleteCard, handleLike, openImagePopup) {
   const templateCards = document.querySelector("#card-template").content;
   const cardElement = templateCards.querySelector(".card").cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
@@ -6,12 +8,15 @@ function createCard(card, deleteCard, handleLike, openImagePopup) {
   cardElement.querySelector(".card__image").alt = card.name;
   cardElement.querySelector(".card__image").src = card.link;
   cardElement.querySelector(".card__title").textContent = card.name;
-
+  if (userId === card.owner._id) {
+    deleteButton.addEventListener("click", () =>
+      deleteCard(cardElement, card._id)
+    );
+  } else {
+    deleteButton.remove();
+  }
   cardElement.querySelector(".card__image").addEventListener("click", () => {
     openImagePopup(card.link, card.name);
-  });
-  deleteButton.addEventListener("click", () => {
-    deleteCard(cardElement);
   });
   likeButton.addEventListener("click", () => {
     handleLike(likeButton);
@@ -19,8 +24,14 @@ function createCard(card, deleteCard, handleLike, openImagePopup) {
   return cardElement;
 }
 
-const deleteCard = (cardElement) => {
-  cardElement.remove();
+const deleteCard = (cardElement, cardId) => {
+  deleteMyCard(cardId)
+    .then(() => {
+      cardElement.remove();
+    })
+    .catch((err) => {
+      console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+    });
 };
 
 function addLike(button) {

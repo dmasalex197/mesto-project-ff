@@ -3,7 +3,11 @@ import { openPopup, closePopup } from "../components/modal.js";
 import { createCard, deleteCard, addLike } from "../components/card.js";
 import { enableValidation, clearValidation } from "../components/validation.js";
 import { validationConfig } from "../components/config.js";
-import { getUserAndCards, updateUser } from "../components/api.js";
+import {
+  getUserGetCards,
+  updateUser,
+  createNewCard,
+} from "../components/api.js";
 
 const placesList = document.querySelector(".places__list");
 const popups = document.querySelectorAll(".popup__content");
@@ -31,7 +35,13 @@ const popupImageCaption = popupImage.querySelector(".popup__caption");
 // @todo: Вывести карточки на страницу
 function startInitialCards(userId, initCards) {
   initCards.forEach((element) => {
-    const card = createCard(element, deleteCard, addLike, openImagePopup);
+    const card = createCard(
+      userId,
+      element,
+      deleteCard,
+      addLike,
+      openImagePopup
+    );
     placesList.append(card);
   });
 }
@@ -39,14 +49,26 @@ function startInitialCards(userId, initCards) {
 // @todo: Создание новой карточки
 function addNewCard(evt) {
   evt.preventDefault();
-  const newCard = {
-    name: placeNameInput.value,
-    link: linkInput.value,
-  };
-  const newCardElement = createCard(newCard, deleteCard, addLike);
-  placesList.append(newCardElement);
-  closePopup(popupNewCard);
-  newCardForm.reset();
+  createNewCard(placeNameInput.value, linkInput.value)
+    .then((data) => {
+      const newCard = {
+        name: data.name,
+        link: data.link,
+      };
+      const newCardElement = createCard(
+        data.owner._id,
+        data,
+        newCard,
+        deleteCard,
+        addLike
+      );
+      placesList.append(newCardElement);
+      closePopup(popupNewCard);
+      newCardForm.reset();
+    })
+    .catch((err) => {
+      console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+    });
 }
 
 // @todo: Функция редактирования и сохранения данных о пользователе
@@ -104,7 +126,7 @@ const setUserProfile = (user) => {
   profileImage.style = `background-image: url(${user.avatar})`;
 };
 
-getUserAndCards()
+getUserGetCards()
   .then(([user, cards]) => {
     startInitialCards(user._id, cards);
     setUserProfile(user);

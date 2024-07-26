@@ -26,7 +26,7 @@ const getCards = () => {
   }).then(checkResponse);
 };
 
-const getUserAndCards = () => {
+const getUserGetCards = () => {
   return Promise.all([getUser(), getCards()]);
 };
 
@@ -47,4 +47,34 @@ const updateUser = (newName, newDescription) => {
   ).then(checkResponse);
 };
 
-export { getUserAndCards, updateUser };
+const createNewCard = (newName, newLink) => {
+  return fetch(
+    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards`,
+    {
+      method: "POST",
+      headers: {
+        authorization: apiConfig.token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: newName,
+        link: newLink,
+      }),
+    }
+  ).then(checkResponse);
+};
+
+const deleteMyCard = (cardId) => {
+  return fetch(
+    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards/${cardId}`,
+    {
+      method: "DELETE",
+      headers: {
+        authorization: apiConfig.token,
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(checkResponse);
+};
+
+export { getUserGetCards, updateUser, createNewCard, deleteMyCard };
