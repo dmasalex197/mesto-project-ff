@@ -20,11 +20,12 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img
-            src="<%=require('./images/avatar.jpg')%>"
-            alt="zak_iv_custo"
+          <div
             class="profile__image"
-          />
+            style="background-image: url(<%=require('./images/avatar.jpg')%>)"
+          >
+            <div class="profile__change-avatar"></div>
+          </div>
           <div class="profile__info">
             <h1 class="profile__title">Алексей</h1>
             <button class="profile__edit-button" type="button"></button>

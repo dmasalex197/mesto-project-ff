@@ -7,4 +7,9 @@ const validationConfig = {
   errorClass: "popup__error_visible",
 };
 
-export { validationConfig };
+const apiConfig = {
+  token: "850ce0bf-3ff5-4c94-b7b5-b0b088ad7a56",
+  idGroup: "wff-cohort-18",
+};
+
+export { validationConfig, apiConfig };

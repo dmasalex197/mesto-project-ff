@@ -1,18 +1,19 @@
 import "../pages/index.css";
-import { initialCards } from "./cards.js";
 import { openPopup, closePopup } from "../components/modal.js";
 import { createCard, deleteCard, addLike } from "../components/card.js";
 import { enableValidation, clearValidation } from "../components/validation.js";
 import { validationConfig } from "../components/config.js";
+import { getUserAndCards, updateUser } from "../components/api.js";
 
 const placesList = document.querySelector(".places__list");
 const popups = document.querySelectorAll(".popup__content");
 const newPlaseModal = document.querySelector(".profile__add-button");
-const profileEditModal = document.querySelector(".profile__edit-button"); //.profile__edit-button
+const profileEditModal = document.querySelector(".profile__edit-button");
 const popupNewCard = document.querySelector(".popup_type_new-card");
 const popupEditTitle = document.querySelector(".popup_type_edit");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileImage = document.querySelector(".profile__image");
 const popupFormEditName = document.querySelector(".popup__input_type_name");
 const popupFormEditDescription = document.querySelector(
   ".popup__input_type_description"
@@ -28,10 +29,12 @@ const popupImageElement = popupImage.querySelector(".popup__image");
 const popupImageCaption = popupImage.querySelector(".popup__caption");
 
 // @todo: Вывести карточки на страницу
-initialCards.forEach(function (element) {
-  const card = createCard(element, deleteCard, addLike, openImagePopup);
-  placesList.append(card);
-});
+function startInitialCards(userId, initCards) {
+  initCards.forEach((element) => {
+    const card = createCard(element, deleteCard, addLike, openImagePopup);
+    placesList.append(card);
+  });
+}
 
 // @todo: Создание новой карточки
 function addNewCard(evt) {
@@ -51,9 +54,15 @@ function editPopupFormProfile(evt) {
   evt.preventDefault();
   const nameValue = popupFormEditName.value;
   const jobValue = popupFormEditDescription.value;
-  profileTitle.textContent = nameValue;
-  profileDescription.textContent = jobValue;
-  closePopup(popupEditTitle);
+  updateUser(nameValue, jobValue)
+    .then(() => {
+      profileTitle.textContent = nameValue;
+      profileDescription.textContent = jobValue;
+      closePopup(popupEditTitle);
+    })
+    .catch((err) => {
+      console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+    });
 }
 
 formEditProfile.addEventListener("submit", editPopupFormProfile);
@@ -88,3 +97,18 @@ newPlaseModal.addEventListener("click", () => {
 });
 
 enableValidation(validationConfig);
+
+const setUserProfile = (user) => {
+  profileTitle.textContent = user.name;
+  profileDescription.textContent = user.about;
+  profileImage.style = `background-image: url(${user.avatar})`;
+};
+
+getUserAndCards()
+  .then(([user, cards]) => {
+    startInitialCards(user._id, cards);
+    setUserProfile(user);
+  })
+  .catch((err) => {
+    console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+  });
