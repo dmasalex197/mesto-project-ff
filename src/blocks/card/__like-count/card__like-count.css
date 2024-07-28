@@ -1,0 +1,14 @@
+.card__like-number {
+  margin: 0px;
+  font-family: "Inter", sans-serif;
+  line-height: 15.73px;
+  font-size: 13px;
+}
+
+.card__like-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}

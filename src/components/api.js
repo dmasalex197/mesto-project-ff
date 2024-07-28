@@ -48,20 +48,17 @@ const updateUser = (newName, newDescription) => {
 };
 
 const createNewCard = (newName, newLink) => {
-  return fetch(
-    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards`,
-    {
-      method: "POST",
-      headers: {
-        authorization: apiConfig.token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: newName,
-        link: newLink,
-      }),
-    }
-  ).then(checkResponse);
+  return fetch(`https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards`, {
+    method: "POST",
+    headers: {
+      authorization: apiConfig.token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: newName,
+      link: newLink,
+    }),
+  }).then(checkResponse);
 };
 
 const deleteMyCard = (cardId) => {
@@ -77,4 +74,37 @@ const deleteMyCard = (cardId) => {
   ).then(checkResponse);
 };
 
-export { getUserGetCards, updateUser, createNewCard, deleteMyCard };
+const addLikeApi = (cardId) => {
+  return fetch(
+    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards/likes/${cardId}`,
+    {
+      method: "PUT",
+      headers: {
+        authorization: apiConfig.token,
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(checkResponse);
+};
+
+const deleteLikeApi = (cardId) => {
+  return fetch(
+    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards/likes/${cardId}`,
+    {
+      method: "DELETE",
+      headers: {
+        authorization: apiConfig.token,
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(checkResponse);
+};
+
+export {
+  getUserGetCards,
+  updateUser,
+  createNewCard,
+  deleteMyCard,
+  addLikeApi,
+  deleteLikeApi,
+};
