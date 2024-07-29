@@ -1,5 +1,9 @@
 import "../pages/index.css";
-import { openPopup, closePopup } from "../components/modal.js";
+import {
+  openPopup,
+  closePopup,
+  closePopupOverlay,
+} from "../components/modal.js";
 import { createCard, deleteCard, addLike } from "../components/card.js";
 import { enableValidation, clearValidation } from "../components/validation.js";
 import { validationConfig } from "../components/config.js";
@@ -7,6 +11,7 @@ import {
   getUserGetCards,
   updateUser,
   createNewCard,
+  updateAvatarImage,
 } from "../components/api.js";
 
 const placesList = document.querySelector(".places__list");
@@ -31,6 +36,10 @@ const linkInput = newCardForm.querySelector(".popup__input_type_url");
 const popupImage = document.querySelector(".popup_type_image");
 const popupImageElement = popupImage.querySelector(".popup__image");
 const popupImageCaption = popupImage.querySelector(".popup__caption");
+
+const popupEditAvatar = document.querySelector(".popup_type_change-avatar");
+const changeAvatarForm = document.forms["change-avatar"];
+const newAvatarUrl = changeAvatarForm.elements["place-avatar-url"];
 
 // @todo: Вывести карточки на страницу
 function startInitialCards(userId, initCards) {
@@ -98,11 +107,10 @@ function openImagePopup(imageLink, caption) {
 }
 
 popups.forEach((popup) => {
-  popup.addEventListener("click", (evt) => {
-    if (evt.target.classList.contains("popup__close")) {
-      const modal = document.querySelector(".popup_is-opened");
-      closePopup(modal);
-    }
+  popup.addEventListener("click", closePopupOverlay);
+  const closeButton = popup.querySelector(".popup__close");
+  closeButton.addEventListener("click", () => {
+    closePopup(popup);
   });
 });
 
@@ -134,3 +142,32 @@ getUserGetCards()
   .catch((err) => {
     console.log(`Произошла ошибка, попробуйте позже: ${err}`);
   });
+
+profileImage.addEventListener("click", () => {
+  clearValidation(popupEditAvatar, validationConfig);
+  openPopup(popupEditAvatar);
+});
+
+popupEditAvatar.addEventListener("click", closePopup);
+
+popupEditAvatar
+  .querySelector(".popup__close")
+  .addEventListener("click", (evt) => {
+    closePopup(evt.target.closest(".popup"));
+  });
+
+const changeAvatarFormSubmit = (evt) => {
+  evt.preventDefault();
+
+  updateAvatarImage(newAvatarUrl.value)
+    .then(() => {
+      profileImage.style = `background-image: url(${newAvatarUrl.value})`;
+      popupEditAvatar.reset();
+      closePopup(evt.target.closest(".popup"));
+    })
+    .catch((err) => {
+      console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+    });
+};
+
+popupEditAvatar.addEventListener("submit", changeAvatarFormSubmit);

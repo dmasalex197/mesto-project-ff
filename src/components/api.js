@@ -100,6 +100,22 @@ const deleteLikeApi = (cardId) => {
   ).then(checkResponse);
 };
 
+const updateAvatarImage = (newAvatarImageUrl) => {
+  return fetch(
+    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/users/me/avatar`,
+    {
+      method: "PATCH",
+      headers: {
+        authorization: apiConfig.token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        avatar: newAvatarImageUrl,
+      }),
+    }
+  ).then(checkResponse);
+};
+
 export {
   getUserGetCards,
   updateUser,
@@ -107,4 +123,5 @@ export {
   deleteMyCard,
   addLikeApi,
   deleteLikeApi,
+  updateAvatarImage,
 };
