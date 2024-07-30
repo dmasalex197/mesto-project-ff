@@ -8,7 +8,7 @@ import { createCard, deleteCard, addLike } from "../components/card.js";
 import { enableValidation, clearValidation } from "../components/validation.js";
 import { validationConfig } from "../components/config.js";
 import {
-  getUserGetCards,
+  getUserAndCards,
   updateUser,
   createNewCard,
   updateAvatarImage,
@@ -66,10 +66,10 @@ function addNewCard(evt) {
       };
       const newCardElement = createCard(
         data.owner._id,
-        data,
         newCard,
         deleteCard,
-        addLike
+        addLike,
+        openImagePopup
       );
       placesList.append(newCardElement);
       closePopup(popupNewCard);
@@ -134,7 +134,7 @@ const setUserProfile = (user) => {
   profileImage.style = `background-image: url(${user.avatar})`;
 };
 
-getUserGetCards()
+getUserAndCards()
   .then(([user, cards]) => {
     startInitialCards(user._id, cards);
     setUserProfile(user);

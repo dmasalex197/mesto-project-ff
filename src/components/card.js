@@ -24,6 +24,11 @@ function createCard(userId, card, deleteCard, handleLike, openImagePopup) {
     openImagePopup(card.link, card.name);
   });
 
+  const lengthLike = card.likes.length;
+  if (lengthLike > 0) {
+    likeButton.classList.add("card__like-button_is-active");
+  }
+
   likeButton.addEventListener("click", () => {
     handleLike(likeButton, card._id, cardElemntLikes);
   });
@@ -41,25 +46,37 @@ const deleteCard = (cardElement, cardId) => {
 };
 
 function addLike(button, cardId, cardLikes) {
-  if (button.classList.contains("card__like-button_is-active")) {
-    deleteLikeApi(cardId)
-      .then((data) => {
-        button.classList.remove("card__like-button_is-active");
-        cardLikes.textContent = data.likes.length;
-      })
-      .catch((err) => {
-        console.log(`Произошла ошибка, попробуйте позже: ${err}`);
-      });
-  } else {
-    addLikeApi(cardId)
-      .then((data) => {
-        button.classList.add("card__like-button_is-active");
-        cardLikes.textContent = data.likes.length;
-      })
-      .catch((err) => {
-        console.log(`Произошла ошибка, попробуйте позже: ${err}`);
-      });
-  }
+  const likeMethod = button.classList.contains("card__like-button_is-active")
+    ? deleteLikeApi
+    : addLikeApi;
+  likeMethod(cardId)
+    .then((data) => {
+      button.classList.remove("card__like-button_is-active");
+      cardLikes.textContent = data.likes.length;
+    })
+    .catch((err) => {
+      console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+    });
+
+  // if (button.classList.contains("card__like-button_is-active")) {
+  //   deleteLikeApi(cardId)
+  //     .then((data) => {
+  //       button.classList.remove("card__like-button_is-active");
+  //       cardLikes.textContent = data.likes.length;
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+  //     });
+  // } else {
+  //   addLikeApi(cardId)
+  //     .then((data) => {
+  //       button.classList.add("card__like-button_is-active");
+  //       cardLikes.textContent = data.likes.length;
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Произошла ошибка, попробуйте позже: ${err}`);
+  //     });
+  // }
 }
 
 export { createCard, deleteCard, addLike };

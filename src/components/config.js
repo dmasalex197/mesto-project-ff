@@ -8,6 +8,7 @@ const validationConfig = {
 };
 
 const apiConfig = {
+  baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-18",
   token: "850ce0bf-3ff5-4c94-b7b5-b0b088ad7a56",
   idGroup: "wff-cohort-18",
 };

@@ -8,31 +8,28 @@ function checkResponse(response) {
 }
 
 const getUser = () => {
-  return fetch(
-    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/users/me`,
-    {
-      headers: {
-        authorization: apiConfig.token,
-      },
-    }
-  ).then(checkResponse);
-};
-
-const getCards = () => {
-  return fetch(`https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards`, {
+  return fetch(`${apiConfig.baseUrl}/users/me`, {
     headers: {
       authorization: apiConfig.token,
     },
   }).then(checkResponse);
 };
 
-const getUserGetCards = () => {
+const getCards = () => {
+  return fetch(`${apiConfig.baseUrl}/cards`, {
+    headers: {
+      authorization: apiConfig.token,
+    },
+  }).then(checkResponse);
+};
+
+const getUserAndCards = () => {
   return Promise.all([getUser(), getCards()]);
 };
 
 const updateUser = (newName, newDescription) => {
   return fetch(
-    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/users/me`,
+    `${apiConfig.baseUrl}/users/me`,
     {
       method: "PATCH",
       headers: {
@@ -48,7 +45,7 @@ const updateUser = (newName, newDescription) => {
 };
 
 const createNewCard = (newName, newLink) => {
-  return fetch(`https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards`, {
+  return fetch(`${apiConfig.baseUrl}/cards`, {
     method: "POST",
     headers: {
       authorization: apiConfig.token,
@@ -63,7 +60,7 @@ const createNewCard = (newName, newLink) => {
 
 const deleteMyCard = (cardId) => {
   return fetch(
-    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards/${cardId}`,
+    `${apiConfig.baseUrl}/cards/${cardId}`,
     {
       method: "DELETE",
       headers: {
@@ -76,7 +73,7 @@ const deleteMyCard = (cardId) => {
 
 const addLikeApi = (cardId) => {
   return fetch(
-    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards/likes/${cardId}`,
+    `${apiConfig.baseUrl}/cards/likes/${cardId}`,
     {
       method: "PUT",
       headers: {
@@ -89,7 +86,7 @@ const addLikeApi = (cardId) => {
 
 const deleteLikeApi = (cardId) => {
   return fetch(
-    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/cards/likes/${cardId}`,
+    `${apiConfig.baseUrl}/cards/likes/${cardId}`,
     {
       method: "DELETE",
       headers: {
@@ -102,7 +99,7 @@ const deleteLikeApi = (cardId) => {
 
 const updateAvatarImage = (newAvatarImageUrl) => {
   return fetch(
-    `https://mesto.nomoreparties.co/v1/${apiConfig.idGroup}/users/me/avatar`,
+    `${apiConfig.baseUrl}/users/me/avatar`,
     {
       method: "PATCH",
       headers: {
@@ -117,7 +114,7 @@ const updateAvatarImage = (newAvatarImageUrl) => {
 };
 
 export {
-  getUserGetCards,
+  getUserAndCards,
   updateUser,
   createNewCard,
   deleteMyCard,
