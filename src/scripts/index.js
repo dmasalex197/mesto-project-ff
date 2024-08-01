@@ -86,9 +86,9 @@ function editPopupFormProfile(evt) {
   const nameValue = popupFormEditName.value;
   const jobValue = popupFormEditDescription.value;
   updateUser(nameValue, jobValue)
-    .then(() => {
-      profileTitle.textContent = nameValue;
-      profileDescription.textContent = jobValue;
+    .then((res) => {
+      profileTitle.textContent = res.name;
+      profileDescription.textContent = res.about;
       closePopup(popupEditTitle);
     })
     .catch((err) => {

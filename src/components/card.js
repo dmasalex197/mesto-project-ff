@@ -24,8 +24,7 @@ function createCard(userId, card, deleteCard, handleLike, openImagePopup) {
     openImagePopup(card.link, card.name);
   });
 
-  const lengthLike = card.likes.length;
-  if (lengthLike > 0) {
+  if (card.likes.some((like) => like._id === userId)) {
     likeButton.classList.add("card__like-button_is-active");
   }
 
@@ -57,26 +56,6 @@ function addLike(button, cardId, cardLikes) {
     .catch((err) => {
       console.log(`Произошла ошибка, попробуйте позже: ${err}`);
     });
-
-  // if (button.classList.contains("card__like-button_is-active")) {
-  //   deleteLikeApi(cardId)
-  //     .then((data) => {
-  //       button.classList.remove("card__like-button_is-active");
-  //       cardLikes.textContent = data.likes.length;
-  //     })
-  //     .catch((err) => {
-  //       console.log(`Произошла ошибка, попробуйте позже: ${err}`);
-  //     });
-  // } else {
-  //   addLikeApi(cardId)
-  //     .then((data) => {
-  //       button.classList.add("card__like-button_is-active");
-  //       cardLikes.textContent = data.likes.length;
-  //     })
-  //     .catch((err) => {
-  //       console.log(`Произошла ошибка, попробуйте позже: ${err}`);
-  //     });
-  // }
 }
 
 export { createCard, deleteCard, addLike };
